@@ -18,15 +18,23 @@ Route::get('/', function () {
 });
 
 Route::get('/teams', function () {
-    return view('master/teams');
+    return view('master/teams/index');
+});
+
+Route::get('/teams/addedit', function () {
+    return view('master/teams/addedit');
 });
 
 Route::get('/pricelist', function () {
-    return view('master/pricelist');
+    return view('master/pricelist/index');
 });
 
 Route::get('/penjualan', function () {
-    return view('transaksi/penjualan');
+    return view('transaksi/penjualan/index');
+});
+
+Route::get('/penjualan/addedit', function () {
+    return view('transaksi/penjualan/addedit');
 });
 
 Route::get('/laporanpenjualan', function () {

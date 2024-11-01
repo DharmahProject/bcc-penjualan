@@ -48,7 +48,7 @@
                 </div>
                 
                   <div class="col-md-6 text-left">
-                    <button type="button" class="btn btn-success btn-sm"><i class="fa fa-plus active"></i> Tambah Data</button>
+                    <a href="{{ url('penjualan/addedit') }}" class="btn btn-success btn-sm"><i class="fa fa-plus active"></i> Tambah Data</a>
                   </div>
                   <div class="col-md-6 text-right">
                     <button type="button" class="btn btn-success btn-sm"><i class="fa fa-search active"></i>  Cari Data</button>
