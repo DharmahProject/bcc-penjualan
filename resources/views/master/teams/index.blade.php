@@ -25,25 +25,40 @@
               <div class="clearfix"></div>
             </div>
             <div class="x_content">
-              <br />
-              <form class="form-label-left input_mask">
-  
                 <div class="col-md-6 col-sm-6  form-group">
-                  <input type="text" class="form-control " id="inputSuccess2" placeholder="Nama">
+                    <label class="col-form-label col-md-3 col-sm-3">Nama</label>
+                    <div class="col-md-9 col-sm-9">
+                        <input type="text" class="form-control" placeholder="Nama" id="txtNama">
+                    </div>
                 </div>
   
-                <div class="col-md-6 col-sm-6  form-group has-feedback">
-                  <input type="text" class="form-control" id="inputSuccess3" placeholder="Sales Coordinator">
+                <div class="form-group col-md-6 col-sm-6">
+                    <label class="col-form-label col-md-3 col-sm-3">Sales Manager</label>
+                    <div class="col-md-9 col-sm-9">
+                        <select class="form-control" placeholder="Pilih Manager" id="txtSalesManager">
+                            <option value="">-- Pilih Sales Manager --</option>
+                        </select>
+                    </div>
                 </div>
-                
+
+                <div class="form-group col-md-6 col-sm-6">
+                    <label class="col-form-label col-md-3 col-sm-3">Sales Coordinator</label>
+                    <div class="col-md-9 col-sm-9">
+                        <select class="form-control" placeholder="Pilih Manager" id="txtSalesCoordinator">
+                            <option value="">-- Pilih Sales Coordinator --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="row">
                   <div class="col-md-6 text-left">
                     <a href="{{ url('teams/addedit') }}" class="btn btn-success btn-sm"><i class="fa fa-plus active"></i> Tambah Data</a>
                   </div>
                   <div class="col-md-6 text-right">
                     <button type="button" class="btn btn-success btn-sm"><i class="fa fa-search active"></i>  Cari Data</button>
-                    <button class="btn btn-secondary btn-sm" type="reset "><i class="fa fa-close active"></i>  Reset</button>
+                    <button class="btn btn-secondary btn-sm" onclick="resetSearchTeam()"><i class="fa fa-close active"></i>  Reset</button>
                   </div>
-              </form>
+                </div>
             </div>
           </div>
         </div>
@@ -510,9 +525,6 @@
                       </div>
                   </div>
                 </div>
-
-
-
               </div>
             </div>
           </div>
@@ -521,4 +533,13 @@
     </div>
   </div>
  
+<script>
+    function resetSearchTeam()
+    {
+        $("#txtSalesCoordinator").val("");
+        $("#txtSalesManager").val("");
+        $("#txtNama").val("");
+    }
+</script>
+
 @endsection

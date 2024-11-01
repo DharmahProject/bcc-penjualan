@@ -29,6 +29,11 @@ Route::get('/pricelist', function () {
     return view('master/pricelist/index');
 });
 
+Route::get('/pricelist/addedit', function () {
+    return view('master/pricelist/addedit');
+});
+
+
 Route::get('/penjualan', function () {
     return view('transaksi/penjualan/index');
 });

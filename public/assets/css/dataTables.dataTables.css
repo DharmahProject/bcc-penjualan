@@ -852,6 +852,7 @@ div.dt-container .dt-info,
 div.dt-container .dt-processing,
 div.dt-container .dt-paging {
     color: inherit;
+    margin-top: 10px;
 }
 
 div.dt-container .dataTables_scroll {

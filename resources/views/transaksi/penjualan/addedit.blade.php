@@ -71,7 +71,6 @@
             <div class="clearfix"></div>
           </div>
           <div class="x_content">
-            <br />
             <div class="form-group row col-md-6 ">
               <label class="col-form-label col-md-3 col-sm-3 ">Tipe Rumah</label>
               <div class="col-md-9 col-sm-9 ">
@@ -81,9 +80,9 @@
               </div>
             </div>
             <div class="form-group row col-md-6 col-sm-6">
-              <label class="col-form-label col-md-3 col-sm-3 ">Blok/ Nomor</label>
+              <label class="col-form-label col-md-3 col-sm-3 ">Bobot PPJB</label>
               <div class="col-md-9 col-sm-9 ">
-                <input type="text" class="form-control" placeholder="Blok/ Nomor">
+                <input type="text" class="form-control" placeholder="Bobot PPJB">
               </div>
             </div>
             <div class="form-group row col-md-6 col-sm-6">
@@ -99,21 +98,22 @@
               </div>
             </div>
             <div class="form-group row col-md-6 col-sm-6">
-              <label class="col-form-label col-md-3 col-sm-3 ">Bobot PPJB</label>
+              <label class="col-form-label col-md-3 col-sm-3 ">Blok/ Nomor</label>
               <div class="col-md-9 col-sm-9 ">
-                <input type="text" class="form-control" placeholder="Bobot PPJB">
+                <input type="text" class="form-control" placeholder="Blok/ Nomor">
               </div>
             </div>
+            
             <div class="form-group row col-md-6 col-sm-6">
               <label class="col-form-label col-md-3 col-sm-3 ">Harga Jual Standar</label>
               <div class="col-md-9 col-sm-9 ">
-                <input type="text" class="form-control" placeholder="Harga Jual Standar">
+                <input type="text" class="form-control" placeholder="Harga Jual Standar" disabled>
               </div>
             </div>
             <div class="form-group row col-md-6 col-sm-6">
               <label class="col-form-label col-md-3 col-sm-3 ">Luas Bangunan</label>
               <div class="col-md-9 col-sm-9 ">
-                <input type="text" class="form-control" placeholder="Luas Bangunan">
+                <input type="text" class="form-control" placeholder="Luas Bangunan" disabled>
               </div>
             </div>
             <div class="form-group row col-md-6 col-sm-6">
@@ -125,13 +125,13 @@
             <div class="form-group row col-md-6 col-sm-6">
               <label class="col-form-label col-md-3 col-sm-3 ">Luas Tanah</label>
               <div class="col-md-9 col-sm-9 ">
-                <input type="text" class="form-control" placeholder="Luas Tanah">
+                <input type="text" class="form-control" placeholder="Luas Tanah" disabled>
               </div>
             </div>
             <div class="form-group row col-md-6 col-sm-6">
               <label class="col-form-label col-md-3 col-sm-3 ">Harga Setelah Diskon</label>
               <div class="col-md-9 col-sm-9 ">
-                <input type="text" class="form-control" placeholder="Harga Setelah Diskon">
+                <input type="text" class="form-control" placeholder="Harga Setelah Diskon" disabled>
               </div>
             </div>
             <div class="form-group row col-md-6 col-sm-6">
@@ -178,7 +178,6 @@
             <div class="clearfix"></div>
           </div>
           <div class="x_content">
-            <br />
             <div class="form-group row col-md-6 col-sm-6">
               <label class="col-form-label col-md-3 col-sm-3 ">Sales Executive</label>
               <div class="col-md-9 col-sm-9 ">
@@ -190,8 +189,11 @@
             <div class="form-group row col-md-6 col-sm-6">
               <label class="col-form-label col-md-3 col-sm-3 ">Cara Beli</label>
               <div class="col-md-9 col-sm-9 ">
-                <select class="form-control" placeholder="Pilih Sales">
+                <select class="form-control" placeholder="Pilih Cara Beli" id="txtCaraBeli">
                   <option value="">-- Pilih Cara Beli --</option>
+                  <option value="KPR"> KPR</option>
+                  <option value="Tunai Bertahap">Tunai Bertahap</option>
+                  <option value="Tunai Keras">Tunai Keras</option>
                 </select>
               </div>
             </div>
@@ -252,7 +254,6 @@
             <div class="clearfix"></div>
           </div>
           <div class="x_content">
-            <br />
             <div class="form-group row col-md-6 col-sm-6">
               <label class="col-form-label col-md-3 col-sm-3 ">Nama Konsumen</label>
               <div class="col-md-9 col-sm-9 ">
