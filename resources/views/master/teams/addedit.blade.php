@@ -24,7 +24,6 @@
                   <div class="clearfix"></div>
               </div>
               <div class="x_content">
-                  <br />
                   <div class="form-group col-md-6 col-sm-6">
                       <label class="col-form-label col-md-3 col-sm-3">Nama</label>
                       <div class="col-md-9 col-sm-9">
@@ -100,4 +99,28 @@
 
   </div>
 </div> 
+
+<script>
+    function previewFotoFile() {
+        const file = document.getElementById("fileUploadPhoto").files[0];
+        const preview = document.getElementById("filePreviewPhoto");
+        const fileName = document.getElementById("fileNamePhoto");
+        const previewContainer = document.getElementById("previewContainerPhoto");
+
+        if (file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                fileName.textContent = `File: ${file.name}`;
+                previewContainer.style.display = "block"; // Show preview container
+            };
+
+            reader.readAsDataURL(file);
+        } else {
+            previewContainer.style.display = "none"; // Hide preview if no file is chosen
+        }
+    }
+</script>
+
 @endsection

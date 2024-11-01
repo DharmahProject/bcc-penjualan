@@ -36,25 +36,85 @@
               <div class="clearfix"></div>
             </div>
             <div class="x_content">
-              <br />
-              <form class="form-label-left input_mask">
-  
-                <div class="col-md-6 col-sm-6  form-group">
-                  <input type="text" class="form-control " id="inputSuccess2" placeholder="Tipe">
+                <div class="form-group col-md-6 col-sm-6">
+                    <label class="col-form-label col-md-3 col-sm-3">Tanggal Booking</label>
+                    <div class="col-md-9 col-sm-9">
+                      <div class="input-prepend input-group">
+                        <span class="add-on input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input type="text" name="txtTanggalBooking" id="txtTanggalBooking" class="form-control" value="" />
+                      </div>
+                    </div>
                 </div>
-  
-                <div class="col-md-6 col-sm-6  form-group has-feedback">
-                  <input type="text" class="form-control" id="inputSuccess3" placeholder="Blok">
+                <div class="form-group col-md-6 col-sm-6">
+                  <label class="col-form-label col-md-3 col-sm-3">Tanggal Akad</label>
+                  <div class="col-md-9 col-sm-9">
+                    <div class="input-prepend input-group">
+                      <span class="add-on input-group-addon"><i class="fa fa-calendar"></i></span>
+                      <input type="text" name="txtTanggalAkad" id="txtTanggalAkad" class="form-control" value="" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group col-md-6 col-sm-6">
+                  <label class="col-form-label col-md-3 col-sm-3">SPR No</label>
+                  <div class="col-md-9 col-sm-9">
+                      <input type="text" class="form-control" id="txtSPR" placeholder="SPR No">
+                    </div>
                 </div>
                 
-                  <div class="col-md-6 text-left">
-                    <a href="{{ url('penjualan/addedit') }}" class="btn btn-success btn-sm"><i class="fa fa-plus active"></i> Tambah Data</a>
+                <div class="form-group col-md-6 col-sm-6">
+                  <label class="col-form-label col-md-3 col-sm-3">Sales Executive</label>
+                  <div class="col-md-9 col-sm-9">
+                      <select class="form-control" placeholder="Pilih Periode" id="txtSalesExecutive">
+                          <option value="">-- Pilih Sales Executive --</option>
+                      </select>
                   </div>
-                  <div class="col-md-6 text-right">
-                    <button type="button" class="btn btn-success btn-sm"><i class="fa fa-search active"></i>  Cari Data</button>
-                    <button class="btn btn-secondary btn-sm" type="reset "><i class="fa fa-close active"></i>  Reset</button>
+                </div>
+
+                <div class="form-group col-md-6 col-sm-6">
+                  <label class="col-form-label col-md-3 col-sm-3">Tipe</label>
+                  <div class="col-md-9 col-sm-9">
+                      <select class="form-control" placeholder="Pilih Periode" id="txtTipe">
+                          <option value="">-- Pilih Tipe --</option>
+                      </select>
                   </div>
-              </form>
+                </div>
+
+                <div class="form-group col-md-6 col-sm-6">
+                  <label class="col-form-label col-md-3 col-sm-3">Cara Beli</label>
+                  <div class="col-md-9 col-sm-9">
+                      <select class="form-control" placeholder="Pilih Cara Beli" id="txtCaraBeli">
+                          <option value="">-- Pilih Cara Beli --</option>
+                          <option value="KPR"> KPR</option>
+                          <option value="Tunai Bertahap">Tunai Bertahap</option>
+                          <option value="Tunai Keras">Tunai Keras</option>
+                      </select>
+                  </div>
+                </div>
+
+                <div class="form-group col-md-6 col-sm-6">
+                    <label class="col-form-label col-md-3 col-sm-3">Blok/ No Rumah</label>
+                    <div class="col-md-9 col-sm-9">
+                        <input type="text" class="form-control" id="txtBlock" placeholder="Blok/ No Rumah">
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6 col-sm-6">
+                  <label class="col-form-label col-md-3 col-sm-3">Nama Konsumen</label>
+                  <div class="col-md-9 col-sm-9">
+                      <input type="text" class="form-control" id="txtNamaKonsumen" placeholder="Nama Konsumen">
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+
+                <div class="col-md-6 text-left">
+                  <a href="{{ url('penjualan/addedit') }}" class="btn btn-success btn-sm"><i class="fa fa-plus active"></i> Tambah Data</a>
+                </div>
+                <div class="col-md-6 text-right">
+                  <button type="button" class="btn btn-success btn-sm"><i class="fa fa-search active"></i>  Cari Data</button>
+                  <button class="btn btn-secondary btn-sm" onclick="resetSearchPenjualan()"><i class="fa fa-close active"></i>  Reset</button>
+                </div>
             </div>
           </div>
         </div>
@@ -93,6 +153,9 @@
                             </th>
                             <th rowspan="2" class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                               BLOK/NO
+                            </th>
+                            <th rowspan="2" class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                              SPR No
                             </th>
                             <th rowspan="2" class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                               Bobot PPJB
@@ -223,6 +286,9 @@
                               <span class="text-secondary text-xs ">90</span>
                           </td>
                           <td class="text-center">
+                            <span class="text-secondary text-xs ">SPR-001</span>
+                          </td>
+                          <td class="text-center">
                               <span class="text-secondary text-xs ">Rp. 996.800.000</span>
                           </td>
                           <td class="text-center">
@@ -339,6 +405,9 @@
                               <p class="text-xs  mb-0">90</p>
                           </td>
                           <td class="text-center">
+                            <span class="text-secondary text-xs ">SPR-002</span>
+                          </td>
+                          <td class="text-center">
                               <span class="text-secondary text-xs ">Rp. 996.800.000</span>
                           </td>
                           <td class="text-center">
@@ -450,4 +519,19 @@
     </div>
   </div>
  
+<script>
+
+    function resetSearchPenjualan()
+    {
+        $("#txtTanggalBooking").val("");
+        $("#txtTanggalAkad").val("");
+        $("#txtSPR").val("");
+        $("#txtSalesExecutive").val("");
+        $("#txtTipe").val("");
+        $("#txtCaraBeli").val("");
+        $("#txtBlock").val("");
+        $("#txtNamaKonsumen").val("");
+    }
+</script>
+
 @endsection

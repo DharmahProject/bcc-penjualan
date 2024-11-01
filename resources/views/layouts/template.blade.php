@@ -29,7 +29,7 @@
     {{-- <link href="{{ url('assets/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet"> --}}
     <link href="{{ url('assets/css/dataTables.dataTables.css')}}" rel="stylesheet">
     <link rel="stylesheet" href="{{ url('assets/css/fixedColumns.dataTables.css')}}">
-    
+    <link rel="stylesheet" href="{{ url('assets/css/buttons.dataTables.min.css')}}">
     <!-- Custom Theme Style -->
     <link href="{{ url('assets/css/custom.min.css') }}" rel="stylesheet">
   </head>
@@ -101,13 +101,32 @@
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/fixedcolumns/5.0.3/js/dataTables.fixedColumns.js"></script>
     <script src="https://cdn.datatables.net/fixedcolumns/5.0.3/js/fixedColumns.dataTables.js"></script>
+
+    
+
+<!-- Buttons Extension JS -->
+<script src="{{ url('/assets/js/dataTables.buttons.min.js') }}"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+<!-- JSZip for Excel export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<!-- pdfmake for PDF export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
+
+
     <script src="{{ url('/assets/vendors/echarts/dist/echarts.min.js') }}"></script>
     <script src="{{ url('/assets/js/custom.min.js') }}"></script>
 
     <script>
      $(document).ready(function() {
 
-      init_echarts()
+      init_echarts();
+    //   function init_daterangepicker_reservation() 
+    //   { void 0 !== $.fn.daterangepicker && (console.log("init_daterangepicker_reservation"), 
+    //     $("#txtTanggalBooking").daterangepicker(null, function(e, a, t) { console.log(e.toISOString(), a.toISOString(), t) }), 
+    //     $("#reservation-time").daterangepicker({ timePicker: !0, timePickerIncrement: 30, locale: { format: "MM/DD/YYYY h:mm A" } })) }
+
 
         $('#tablepenjualan').DataTable({
             fixedColumns: {
@@ -115,6 +134,7 @@
                //rightColumns:1
             },
             paging: true,
+            searching: false, // Disables the search box
             scrollCollapse: true,
             scrollX: true,
             autoWidth: false, // Ensures column widths are calculated properly
@@ -123,17 +143,28 @@
           });
 
           $('#tablePricelist').DataTable({
-          
+            searching: false, // Disables the search box
             paging: true,
             scrollCollapse: true,
             scrollX: true,
             autoWidth: false, // Ensures column widths are calculated properly
-            fixedHeader: true // Optional, if you want to fix the header as well
-           
+            fixedHeader: true, // Optional, if you want to fix the header as well
+            dom: '<"row"<"col-md-6"l><"col-md-6 text-right"B>>rt<"row"<"col-md-6"i><"col-md-6 text-right"p>>',
+            buttons: [
+                       'csv', 'excel', 
+                        {
+                            extend: 'pdfHtml5',
+                            orientation: 'landscape', // Set to landscape
+                            pageSize: 'A4',           // Set page size (optional)
+                            text: 'Export PDF',       // Button text (optional)
+                            title: 'Pricelist Bukit Cimanggu City' // PDF title (optional)
+                        }
+                    ]
           });
 
           $('#salesWeekly').DataTable({
             paging: true,
+            searching: false, // Disables the search box
             scrollCollapse: true,
             scrollX: true,
             autoWidth: false, // Ensures column widths are calculated properly
@@ -141,6 +172,31 @@
            
           });
       });
+
+      function init_daterangepicker_reservation() {
+            if (typeof($.fn.daterangepicker) === 'undefined') { return; }
+
+            $('#txtTanggalBooking').daterangepicker({
+                autoUpdateInput: false // Prevents auto-filling of the input with date range
+            }, function(start, end, label) {
+                console.log(start.toISOString(), end.toISOString(), label);
+            });
+
+            $('#txtTanggalAkad').daterangepicker({
+                autoUpdateInput: false // Prevents auto-filling of the input with date range
+            }, function(start, end, label) {
+                console.log(start.toISOString(), end.toISOString(), label);
+            });
+
+            // Optional: Set custom event listeners to update input on date selection
+            $('#txtTanggalBooking, #txtTanggalAkad').on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+            });
+
+            $('#txtTanggalBooking, #txtTanggalAkad').on('cancel.daterangepicker', function(ev, picker) {
+                $(this).val(''); // Clears the input when canceling the selection
+            });
+        }
 
       function init_echarts() {
 
@@ -470,27 +526,6 @@
 
         }
     }
-        function previewFotoFile() {
-            const file = document.getElementById("fileUploadPhoto").files[0];
-            const preview = document.getElementById("filePreviewPhoto");
-            const fileName = document.getElementById("fileNamePhoto");
-            const previewContainer = document.getElementById("previewContainerPhoto");
-
-            if (file) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    fileName.textContent = `File: ${file.name}`;
-                    previewContainer.style.display = "block"; // Show preview container
-                };
-
-                reader.readAsDataURL(file);
-            } else {
-                previewContainer.style.display = "none"; // Hide preview if no file is chosen
-            }
-        }
-    
     </script>
       
   </body>
