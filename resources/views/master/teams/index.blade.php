@@ -7,17 +7,6 @@
         <div class="title_left">
           <h3>Data Teams</h3>
         </div>
-  
-        <div class="title_right">
-          <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Search for...">
-              <span class="input-group-btn">
-                <button class="btn btn-secondary" type="button">Go!</button>
-              </span>
-            </div>
-          </div>
-        </div>
       </div>
   
       <div class="clearfix"></div>
@@ -48,7 +37,7 @@
                 </div>
                 
                   <div class="col-md-6 text-left">
-                    <button type="button" class="btn btn-success btn-sm"><i class="fa fa-plus active"></i> Tambah Data</button>
+                    <a href="{{ url('teams/addedit') }}" class="btn btn-success btn-sm"><i class="fa fa-plus active"></i> Tambah Data</a>
                   </div>
                   <div class="col-md-6 text-right">
                     <button type="button" class="btn btn-success btn-sm"><i class="fa fa-search active"></i>  Cari Data</button>
