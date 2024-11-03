@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PriceListController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,13 +26,13 @@ Route::get('/teams/addedit', function () {
     return view('master/teams/addedit');
 });
 
-Route::get('/pricelist', function () {
-    return view('master/pricelist/index');
-});
+Route::get('/pricelist', [PriceListController::class, 'index']);
 
-Route::get('/pricelist/addedit', function () {
-    return view('master/pricelist/addedit');
-});
+Route::get('/pricelist/addedit/{id?}', [PriceListController::class, 'addedit'])->name('pricelist.addedit');
+
+Route::post('/pricelist/submit', [PriceListController::class, 'submit']);
+
+Route::get('/pricelist/delete/{id?}', [PriceListController::class, 'destroy'])->name('pricelist.delete');
 
 
 Route::get('/penjualan', function () {
