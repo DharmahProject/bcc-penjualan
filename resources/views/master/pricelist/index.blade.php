@@ -27,11 +27,16 @@
           </div>
           <div class="x_content">
                 <div class="form-group col-md-6 col-sm-6">
-                    <label class="col-form-label col-md-3 col-sm-3">Periode</label>
+                    <label class="col-form-label col-md-3 col-sm-3">Periode dari</label>
                     <div class="col-md-9 col-sm-9">
-                        <select class="form-control" placeholder="Pilih Periode" id="txtPeriode">
-                            <option value="">-- Pilih Periode --</option>
-                        </select>
+                        <input type="date" class="form-control" placeholder="Periode Ke" id="txtPeriodeDari">
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6 col-sm-6">
+                    <label class="col-form-label col-md-3 col-sm-3">Periode ke</label>
+                    <div class="col-md-9 col-sm-9">
+                        <input type="date" class="form-control" placeholder="Periode Ke" id="txtPeriodeKe">
                     </div>
                 </div>
 
@@ -46,6 +51,9 @@
                     <div class="col-md-9 col-sm-9">
                         <select class="form-control" placeholder="Pilih Tipe" id="txtTipe">
                             <option value="">-- Pilih Tipe --</option>
+                            @foreach ($propertyTypes as $type)
+                            <option value="{{ $type->id }}">{{ $type->name }}</option>    
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -54,8 +62,9 @@
                     <div class="col-md-9 col-sm-9">
                         <select class="form-control" placeholder="Pilih Jumlah Lantai" id="txtJumlahLantai">
                             <option value="">-- Pilih Jumlah Lantai --</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
+                            @foreach ($propertyFloors as $floor)
+                            <option value="{{ $floor->id }}">{{ $floor->name }}</option>    
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -101,7 +110,7 @@
                   <thead>
                     <tr>
                         <th rowspan="2" class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                            No
+                            Periode
                         </th>
                         <th rowspan="2" class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                             Tipe
@@ -166,7 +175,40 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
+                        @foreach ($clusters as $cluster)
+                        <tr>
+                            
+                            <td class="ps-4 text-center">@formatDate($cluster->periode)</td>
+                            <td class="text-center text-xs">{{ $cluster->propertyType->name }}</td> 
+                            <td class="text-center">{{ $cluster->blok }} </td>
+                            <td class="text-center">{{ $cluster->luas_bangunan }} m²</td>
+                            <td class="text-center">{{ $cluster->luas_tanah }} m²</td>
+                            <td class="text-center">{{ $cluster->propertyFloor->name }}</td> 
+                            <td class="text-center">Rp. {{ number_format($cluster->harga_jual_standar, 0, ',', '.') }}</td>
+                            <td class="text-center">Rp. {{ number_format($cluster->tunai_bertahap, 0, ',', '.') }}</td>
+                            <td class="text-center">Rp. {{ number_format($cluster->tunai_keras, 0, ',', '.') }}</td>
+                            <td class="text-center">Rp. {{ number_format($cluster->kpr, 0, ',', '.') }}</td>
+                            <td class="text-center">Rp. {{ number_format($cluster->uang_muka, 0, ',', '.') }}</td>
+                            <td class="text-center">Rp. {{ number_format($cluster->angsuran, 0, ',', '.') }}</td>
+                            <td  class="text-center">{{ $cluster->created_by }}</td>
+                            <td class="text-center">{{ $cluster->created_at->format('d/m/y') }}</td>
+                            <td  class="text-center">{{ $cluster->updated_by }}</td>
+                            <td class="text-center">{{ $cluster->updated_at->format('d/m/y') }}</td> 
+                            <td class="text-center">
+                                <a href="{{ route('pricelist.addedit', $cluster->id_cluster) }}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-original-title="Edit user">
+                                    <i class="fa fa-pencil-square-o"></i>
+                                </a>
+                                
+                                <span>
+                                    <button class="btn btn-danger  btn-sm" onclick="deleteData('{{ $cluster->id_cluster }}')">
+                                        <i class="fa fa-trash"></i> 
+                                    </button>                                    
+                                </span>
+                            </td>
+                            <!--<td  class="text-center">{{ $cluster->periode }}</td>-->
+                        </tr>
+                    @endforeach
+                    <!--<tr>
                         <td class="ps-4" >
                             <span class="text-secondary text-xs ">1</span>
                         </td>
@@ -282,7 +324,7 @@
                                 <i class="cursor-pointer fas fa-trash text-secondary"></i>
                             </span>
                         </td>
-                    </tr>
+                    </tr>-->
                     
                     </tbody>
                 </table>
@@ -437,13 +479,36 @@
   </div>
 </div>
 
-<script>
+<script type="text/javascript">
     function resetSearchPricelist()
     {
         $("#txtPeriode").val("");
         $("#txtBlock").val("");
         $("#txtJumlahLantai").val("");
         $("#txtTipe").val("");
+    }
+    
+function deleteData(id) {
+        var result = confirm("Apakah anda yakin ingin menghapus data tersebut?");
+        if (result) {
+            waitMsg();
+            $.ajax({
+                type: "GET",
+                url: "{{ route('pricelist.delete', $cluster->id_cluster) }}",
+                contentType: 'application/json',
+                traditional: true,
+                success: function(returnResult) {
+                    console.log(returnResult);
+                    successMsg("Price list", "Data berhasil dihapus");
+                    swal.close();
+                    location.reload();
+                },
+                error: function(returnResult) {
+                    console.log(returnResult);
+                    errMsg("Error", returnResult.responseJSON.message);
+                }
+            });
+        }
     }
 </script>
 

@@ -6,12 +6,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="icon" href="images/favicon.ico" type="image/ico" />
+	<link rel="icon" href="{{ url('assets/images/favicon.ico') }}" type="image/ico" />
 
     <title>Bukit Cimanggu City</title>
 
     <!-- Bootstrap -->
     <link href="{{ url('assets/vendors/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+
     <!-- Font Awesome -->
     <link href="{{ url('assets/vendors/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
     <!-- NProgress -->
@@ -30,8 +31,14 @@
     <link href="{{ url('assets/css/dataTables.dataTables.css')}}" rel="stylesheet">
     <link rel="stylesheet" href="{{ url('assets/css/fixedColumns.dataTables.css')}}">
     <link rel="stylesheet" href="{{ url('assets/css/buttons.dataTables.min.css')}}">
+
+    <!-- alert css -->
+    <link rel="stylesheet" href="{{ url('assets/css/sweetalert2.min.css')}}">
+    
     <!-- Custom Theme Style -->
     <link href="{{ url('assets/css/custom.min.css') }}" rel="stylesheet">
+
+    @yield('header')
   </head>
 
   <body class="nav-md">
@@ -96,6 +103,9 @@
     <script src="{{ url('/assets/vendors/moment/min/moment.min.js') }}"></script>
     <script src="{{ url('/assets/vendors/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
 
+    <!-- alert javascript -->
+    <script src="{{ url('/assets/js/sweetalert2.min.js') }}"></script>
+
     <!-- Custom Theme Scripts -->
 
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
@@ -117,6 +127,9 @@
 
     <script src="{{ url('/assets/vendors/echarts/dist/echarts.min.js') }}"></script>
     <script src="{{ url('/assets/js/custom.min.js') }}"></script>
+
+
+    @yield('footer')
 
     <script>
      $(document).ready(function() {
@@ -526,6 +539,36 @@
 
         }
     }
+
+    function waitMsg() {
+            swal({
+                title: 'Mohon tunggu sebentar',
+                showCancelButton: false,
+                showConfirmButton: false,
+                imageUrl: '{{ url('assets/images/loading.gif') }}',
+                imageWidth: 100,
+                imageHeight: 100,
+                imageAlt: 'Loading image',
+            });
+          }
+
+      function successMsg(titleMsg,message) {
+            swal({
+                    title: titleMsg,
+                    text: message,
+                    type: 'success',
+                    confirmButtonClass: 'btn btn-confirm mt-2'
+                })
+        }
+
+        function errMsg(title, message) {
+            swal({
+                title: title,
+                text: message,
+                type: 'error',
+                confirmButtonClass: 'btn btn-confirm mt-2'
+            })
+        }
     </script>
       
   </body>
