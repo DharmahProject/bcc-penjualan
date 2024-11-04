@@ -7,6 +7,7 @@ use App\Http\Controllers\ResetController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\PriceListController;
+use App\Http\Controllers\SalesController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,7 +20,7 @@ use App\Http\Controllers\PriceListController;
 */
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/', [DashboardController::class, 'home']);
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -31,13 +32,10 @@ Route::group(['middleware' => 'auth'], function () {
         return view('master/teams/addedit');
     });
 
-    Route::get('/penjualan', function () {
-        return view('transaksi/penjualan/index');
-    });
-
-    Route::get('/penjualan/addedit', function () {
-        return view('transaksi/penjualan/addedit');
-    });
+    // penjualan
+    Route::get('/penjualan', [SalesController::class, 'index']);
+    Route::get('/penjualan/addedit/{id?}', [SalesController::class, 'addedit'])->name('sales.addedit');
+    Route::post('/penjualan/submit', [SalesController::class, 'submit']);
 
     Route::get('/laporanpenjualan', function () {
         return view('laporan/penjualan');
