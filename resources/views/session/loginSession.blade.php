@@ -14,8 +14,8 @@
                   <p class="mb-0">Silahkan login <br></p>
                   <p class="mb-0">untuk mengakses halaman admin</p>
                   <p class="mb-0"><b>Bukit Cimanggu City</b></p>
-                  <p class="mb-0" style="color: red"><b>Email : dhermanda678@gmail.com</b></p>
-                  <p class="mb-0" style="color: red"><b>Pass : 12345</b></p>
+                  {{-- <p class="mb-0" style="color: red"><b>Email : dhermanda678@gmail.com</b></p>
+                  <p class="mb-0" style="color: red"><b>Pass : 12345</b></p> --}}
                   {{-- <p class="mb-0">Password <b>secret</b></p> --}}
                 </div>
                 <div class="card-body">
