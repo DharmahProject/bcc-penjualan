@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('cluster', function (Blueprint $table) {
-            $table->integer('tipe_fk')->unsigned()->nullable(); 
+        Schema::table('team', function (Blueprint $table) {
+            //
+            $table->string('profile_picture',2500)->nullable(true);
         });
     }
 
@@ -21,9 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('cluster', function (Blueprint $table) {
+        Schema::table('team', function (Blueprint $table) {
             //
-            $table->datetime('periode')->nullable(false)->change();
+            $table->dropColumn('profile_picture');
         });
     }
 };

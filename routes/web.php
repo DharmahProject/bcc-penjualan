@@ -8,6 +8,7 @@ use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\PriceListController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\TeamController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,13 +25,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/teams', function () {
-        return view('master/teams/index');
-    });
+    
+    Route::get('/teams', [TeamController::class, 'index']);
 
-    Route::get('/teams/addedit', function () {
-        return view('master/teams/addedit');
-    });
+    Route::get('/teams/addedit/{id?}', [TeamController::class, 'addedit'])->name('teams.addedit');
 
     // penjualan
     Route::get('/penjualan', [SalesController::class, 'index']);
@@ -73,7 +71,6 @@ Route::group(['middleware' => 'guest'], function () {
     Route::get('/reset-password/{token}', [ResetController::class, 'resetPass'])->name('password.reset');
     Route::post('/reset-password', [ChangePasswordController::class, 'changePassword'])->name('password.update');
 });
-
 
 Route::get('/login', function () {
     return view('session/loginSession');
