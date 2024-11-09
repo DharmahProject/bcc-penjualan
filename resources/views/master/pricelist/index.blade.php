@@ -494,7 +494,7 @@ function deleteData(id) {
             waitMsg();
             $.ajax({
                 type: "GET",
-                url: "{{ route('pricelist.delete', $cluster->id_cluster) }}",
+                url: "{{ route('pricelist.delete') }}/"+id,
                 contentType: 'application/json',
                 traditional: true,
                 success: function(returnResult) {
