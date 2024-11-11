@@ -25,18 +25,14 @@
               <div class="clearfix"></div>
             </div>
             <div class="x_content">
-                <div class="col-md-6 col-sm-6  form-group">
-                    <label class="col-form-label col-md-3 col-sm-3">Nama</label>
-                    <div class="col-md-9 col-sm-9">
-                        <input type="text" class="form-control" placeholder="Nama" id="txtNama">
-                    </div>
-                </div>
-  
                 <div class="form-group col-md-6 col-sm-6">
                     <label class="col-form-label col-md-3 col-sm-3">Sales Manager</label>
                     <div class="col-md-9 col-sm-9">
                         <select class="form-control" placeholder="Pilih Manager" id="txtSalesManager">
                             <option value="">-- Pilih Sales Manager --</option>
+                            @foreach ($salesmanagerList as $sm)
+                                <option value="{{ $sm->id_team }}">{{ $sm->nama }}</option>    
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -46,7 +42,17 @@
                     <div class="col-md-9 col-sm-9">
                         <select class="form-control" placeholder="Pilih Manager" id="txtSalesCoordinator">
                             <option value="">-- Pilih Sales Coordinator --</option>
+                            @foreach ($saleskoordinatorList as $sk)
+                                <option value="{{ $sk->id_team }}">{{ $sk->nama }}</option>    
+                            @endforeach
                         </select>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-sm-6  form-group">
+                    <label class="col-form-label col-md-3 col-sm-3">Nama</label>
+                    <div class="col-md-9 col-sm-9">
+                        <input type="text" class="form-control" placeholder="Nama" id="txtNama">
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -79,6 +85,52 @@
             <div class="x_content">
               <div class="row">
               {{-- content here --}}
+
+              @foreach ($allTeam as $team)
+              <div class="col-md-3  profile_details">
+                <div class="well profile_view">
+                    <div class="col-sm-12">
+                        <h4 class="brief"><i>{{ $team->jabatan->nama_jabatan }}</i></h4>
+                        <div class="left col-sm-7">
+                            <h2>{{ $team->nama }}</h2>
+                            <ul class="list-unstyled">
+                                <li><i class="fa fa-building"></i> Alamat : {{ $team->alamat }}</li>
+                                <li><i class="fa fa-phone"></i> No Telepon #: {{ $team->telepon }}</li>
+                            </ul>
+                        </div>
+                        <div class="right col-sm-5 text-center">
+                            <img src="{{ url('assets/images/team/' . ($team->profile_picture != null && $team->profile_picture != '' ? $team->profile_picture : 'user.png')) }}" alt="" class="img-circle img-fluid">
+                        </div>
+                    </div>
+                    <div class=" bottom text-center border-top">
+                        <div class=" col-sm-12 emphasis mt-1">
+                            <h4 class="brief"><i>Sales Coordinator</i></h4>
+                            <div class="left col-sm-7">
+                                <h2>{{ $team->sales_coordinator }}</h2>
+                            </div>
+                        </div>
+                        <div class=" col-sm-12 emphasis mt-1">
+                            <h4 class="brief"><i>Sales Manager</i></h4>
+                            <div class="left col-sm-7">
+                                <h2>{{ $team->sales_manager }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" bottom text-center border-top">
+                        <div class=" col-sm-12 emphasis mt-1">
+                            <button type="button" class="btn btn-danger btn-sm"> <i class="fa fa-trash">
+                            </i> Hapus data</button>
+                            <a href="{{ route('teams.addedit', $team->id_team) }}"  class="btn btn-primary btn-sm">
+                            <i class="fa fa-user"> </i> Lihat profil team</a>
+                          </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+              @endforeach
+
+            <!--
                     <div class="col-md-3  profile_details">
                       <div class="well profile_view">
                           <div class="col-sm-12">
@@ -524,7 +576,7 @@
                           </div>
                       </div>
                   </div>
-                </div>
+                </div>-->
               </div>
             </div>
           </div>
