@@ -68,7 +68,7 @@
                 <select class="form-control" placeholder="Pilih Tipe" id="cbTipe">
                     <option value="">-- Pilih Tipe --</option>
                     @foreach ($propertyTypes as $type)
-                    <option {{$cluster->tipe_fk == $type->id ? 'selected' : ''}} value="{{ $type->id }}">{{ $type->name }}</option>    
+                    <option {{$cluster != null ? $cluster->tipe_fk == $type->id ? 'selected' : '' : ''}} value="{{ $type->id }}">{{ $type->name }}</option>    
                     @endforeach
               </select>
               </div>
@@ -80,7 +80,7 @@
                 <select class="form-control" placeholder="Pilih Jumlah Lantai" id="cbJumlahLantai">
                   <option value="">-- Pilih Jumlah Lantai --</option>
                   @foreach ($propertyFloors as $floor)
-                  <option {{$cluster->floor_fk == $floor->id ? 'selected' : ''}} value="{{ $floor->id }}">{{ $floor->name }}</option>    
+                  <option {{ $cluster != null ? $cluster->floor_fk == $floor->id ? 'selected' : '' : ''}} value="{{ $floor->id }}">{{ $floor->name }}</option>    
                   @endforeach
               </select>
               </div>
@@ -239,7 +239,7 @@ const element = document.querySelector('#txtBlok');
 
 $(document).ready(function() {
 
-  let commaSeparatedBlok = "{{ $cluster->blok }}";
+  let commaSeparatedBlok = "{{ $cluster != null ? $cluster->blok : '' }}";
   let arrBlok = commaSeparatedBlok.split(',');
 
   choices.clearStore();
