@@ -65,20 +65,24 @@ class UserController extends Controller
     public function submit(Request $request)
     {
         $user = User::find($request->id);
+
         $request->validate([
             'name' => 'required|string|max:500',
             'email' => [
                 'required',
                 'email',
                 'max:50',
-                $request->email !== $user->email ? Rule::unique('users', 'email') : '' // Apply uniqueness validation only if email is different
+                // Apply uniqueness check only when updating an existing user
+                ($user && $request->email !== $user->email)
+                    ? Rule::unique('users', 'email')
+                    : ''
             ],
             'password' => 'required|string|max:500',
             'phone' => 'required|numeric',
             'level' => 'required|numeric',
             'photo' => $request->hasFile('photo')
-                ? 'required|image|mimes:jpeg,png,jpg|max:2048' // Apply image validation if a file is uploaded
-                : 'nullable', // If no file is uploaded, skip validation
+                ? 'required|image|mimes:jpeg,png,jpg|max:2048'
+                : 'nullable',
         ]);
 
         if ($request->filled('id')) {
@@ -91,11 +95,10 @@ class UserController extends Controller
                     'password' => bcrypt($request->password)
                 ]);
 
-                // Update the photo if a new one is uploaded
                 if ($request->hasFile('photo')) {
                     $path = $request->file('photo')->store('user_photos', 'public');
                     $user->photo = $path;
-                    $user->save();  // Save the updated photo path
+                    $user->save();
                 }
             } else {
                 return response()->json(['error' => 'Data tidak ditemukan'], 404);
@@ -109,7 +112,6 @@ class UserController extends Controller
             $user->level_id = $request->level;
             $user->is_deleted = 0;
 
-            // Handle the uploaded image
             if ($request->hasFile('photo')) {
                 $path = $request->file('photo')->store('user_photos', 'public');
                 $user->photo = $path;
