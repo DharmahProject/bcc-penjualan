@@ -9,6 +9,7 @@ use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\PriceListController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,7 +26,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    
+
     Route::get('/teams', [TeamController::class, 'index']);
 
     Route::get('/teams/addedit/{id?}', [TeamController::class, 'addedit'])->name('teams.addedit');
@@ -40,8 +41,16 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::get('/user', function () {
-        return view('user/user');
+        return view('user/user/');
     });
+
+    Route::get('/user', [UserController::class, 'index']);
+    Route::get('/user/search', [UserController::class, 'search'])->name('user.search');
+    Route::get('/user/addedit/{id?}', [UserController::class, 'addedit'])->name('user.addedit');
+    Route::post('/user/submit', [UserController::class, 'submit']);
+    Route::get('/user/delete/{id?}', [UserController::class, 'destroy'])->name('user.delete');
+
+
 
     Route::get('/profile', function () {
         return view('user/profile');
