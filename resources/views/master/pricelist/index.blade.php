@@ -488,27 +488,10 @@
         $("#txtTipe").val("");
     }
     
-function deleteData(id) {
-        var result = confirm("Apakah anda yakin ingin menghapus data tersebut?");
-        if (result) {
-            waitMsg();
-            $.ajax({
-                type: "GET",
-                url: "{{ route('pricelist.delete') }}/"+id,
-                contentType: 'application/json',
-                traditional: true,
-                success: function(returnResult) {
-                    console.log(returnResult);
-                    successMsg("Price list", "Data berhasil dihapus");
-                    swal.close();
-                    location.reload();
-                },
-                error: function(returnResult) {
-                    console.log(returnResult);
-                    errMsg("Error", returnResult.responseJSON.message);
-                }
-            });
-        }
+    function deleteData(id) {
+        deleteConfirmation(id, '/pricelist/delete', function() {
+        location.reload();
+      });
     }
 </script>
 
