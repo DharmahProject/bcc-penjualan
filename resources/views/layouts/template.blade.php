@@ -33,7 +33,7 @@
     <link rel="stylesheet" href="{{ url('assets/css/buttons.dataTables.min.css')}}">
 
     <!-- alert css -->
-    <link rel="stylesheet" href="{{ url('assets/css/sweetalert2.min.css')}}">
+    {{-- <link rel="stylesheet" href="{{ url('assets/css/sweetalert2.min.css')}}"> --}}
     
     <!-- Custom Theme Style -->
     <link href="{{ url('assets/css/custom.min.css') }}" rel="stylesheet">
@@ -104,7 +104,9 @@
     <script src="{{ url('/assets/vendors/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
 
     <!-- alert javascript -->
-    <script src="{{ url('/assets/js/sweetalert2.min.js') }}"></script>
+    {{-- <script src="{{ url('/assets/js/sweetalert2.min.js') }}"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     <!-- Custom Theme Scripts -->
 
@@ -114,16 +116,15 @@
 
     
 
-<!-- Buttons Extension JS -->
-<script src="{{ url('/assets/js/dataTables.buttons.min.js') }}"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-<!-- JSZip for Excel export -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<!-- pdfmake for PDF export -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
-
+    <!-- Buttons Extension JS -->
+    <script src="{{ url('/assets/js/dataTables.buttons.min.js') }}"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+    <!-- JSZip for Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- pdfmake for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
 
     <script src="{{ url('/assets/vendors/echarts/dist/echarts.min.js') }}"></script>
     <script src="{{ url('/assets/js/custom.min.js') }}"></script>
@@ -542,7 +543,7 @@
 
     function waitMsg() {
             swal({
-                title: 'Mohon tunggu sebentar',
+                title: 'Loading...',
                 showCancelButton: false,
                 showConfirmButton: false,
                 imageUrl: '{{ url('assets/images/loading.gif') }}',
@@ -560,6 +561,63 @@
                     confirmButtonClass: 'btn btn-confirm mt-2'
                 })
         }
+
+        function successMsgCallback(titleMsg, message, callback) {
+            Swal.fire({
+                title: titleMsg,
+                text: message,
+                icon: 'success',  // Use 'icon' instead of 'type' in SweetAlert2
+                confirmButtonText: 'OK',
+                confirmButtonClass: 'btn btn-confirm mt-2'
+            }).then((result) => {
+                if (result.isConfirmed && typeof callback === 'function') {
+                    callback(); // Call the callback function after OK is clicked
+                }
+            });
+        }
+
+        function deleteConfirmation(id, url, callback) 
+        {
+            Swal.fire({
+                title: 'Anda Yakin?',
+                text: "Ingin menghapus data ini",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    // User confirmed deletion
+                    // You can proceed with your AJAX request to delete data here
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ route('user.delete') }}/"+id,
+                        success: function(response) {
+                            // Notify the user that the data was successfully deleted
+                            Swal.fire('User!', 'Data berhasil dihapus.', 'success');
+                            // Optionally call other functions to refresh data
+                            callback();  // Refresh your data list or UI
+                        },
+                        error: function(error) {
+                            // Handle errors here
+                            Swal.fire('Error!', 'Data Tidak di temukan.', error);
+                        }
+                    });
+                } else {
+                    // User canceled deletion
+                    //Swal.fire('Cancelled', 'Your data is safe.', 'info');
+                }
+            });
+        }
+
+        function errorMsg(title, message){
+            Swal.fire({
+            icon: "error",
+            title: "title",
+            text: message
+            });
+        }
+
 
         function errMsg(title, message) {
             swal({
