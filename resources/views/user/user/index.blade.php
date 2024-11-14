@@ -125,7 +125,7 @@
     }
 
     function deleteData(id) {
-      deleteConfirmation(id, '/user/delete', function() {
+      deleteConfirmation(id, "{{ url('/user/delete') }}", function() {
           dataUser();
       });
     }

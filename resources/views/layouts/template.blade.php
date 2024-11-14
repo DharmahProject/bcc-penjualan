@@ -591,10 +591,10 @@
                     // You can proceed with your AJAX request to delete data here
                     $.ajax({
                         type: "GET",
-                        url: "{{ route('user.delete') }}/"+id,
+                        url: `${url}/${id}`, // Use the dynamic URL here
                         success: function(response) {
                             // Notify the user that the data was successfully deleted
-                            Swal.fire('User!', 'Data berhasil dihapus.', 'success');
+                            Swal.fire('Data!', 'Data berhasil dihapus.', 'success');
                             // Optionally call other functions to refresh data
                             callback();  // Refresh your data list or UI
                         },
