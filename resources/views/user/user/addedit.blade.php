@@ -15,7 +15,8 @@
             <li class="breadcrumb-item active" aria-current="page">Tambah / ubah</li>
             <input type="hidden" class="form-control" placeholder="Periode Mulai" id="hdId" value="{{$id != null ? $id : ''}}">
           </ol>
-        </nav>        
+        </nav>    
+        <h3>User</h3>    
       </div>
     </div>
     <div class="clearfix"></div>
