@@ -72,22 +72,22 @@ class UserController extends Controller
 
     public function submit(Request $request)
     {
-        // cari data berdasarkan berdasarkan id
-        $user = User::find($request->id);
+        // Retrieve user data by ID if provided
+        $user = $request->filled('id') ? User::find($request->id) : null;
 
-        // membuat validasi input sebelum proses insert data
+        // Validate the input
         $request->validate([
             'name' => 'required|string|max:500',
             'email' => [
                 'required',
                 'email',
                 'max:50',
-                // 10-11-2024 Penambahan validasi email harus unique jika menambah data baru
-                ($user && $request->email !== $user->email)
-                    ? Rule::unique('users', 'email')
-                    : ''
+                // Jika sedang menambah data baru, pastikan email unik
+                $request->filled('id')
+                    ? Rule::unique('users', 'email')->ignore($user?->id) // Untuk update, abaikan email milik user yang sedang diedit
+                    : Rule::unique('users', 'email'), // Untuk insert, email harus unik
             ],
-            'password' => 'required|string|max:500',
+            'password' => $user ? 'nullable|string|max:500' : 'required|string|max:500',
             'phone' => 'required|numeric',
             'level' => 'required|numeric',
             'photo' => $request->hasFile('photo')
@@ -95,48 +95,44 @@ class UserController extends Controller
                 : 'nullable',
         ]);
 
-        // validasi jika id di temukan, maka akan update data
-        if ($request->filled('id')) {
-            if ($user) {
-                // proses update data
-                $user->update([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'level_id' => $request->level,
-                    'password' => bcrypt($request->password)
-                ]);
+        if ($user) {
+            // Update existing user
+            $user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'level_id' => $request->level,
+                // Update password only if provided
+                'password' => $request->password ? bcrypt($request->password) : $user->password,
+            ]);
 
-                if ($request->hasFile('photo')) {
-                    // menyimpan foto pada folder user_photos dengan tipe public
-                    $path = $request->file('photo')->store('user_photos', 'public');
-                    $user->photo = $path;
-                    $user->save();
-                }
-            } else {
-                return response()->json(['error' => 'Data tidak ditemukan'], 404);
-            }
-        } else {
-            // validasi jika id tidak di temukan, maka akan insert data
-            $user = new User();
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->password = bcrypt($request->password);
-            $user->phone = $request->phone;
-            $user->level_id = $request->level;
-            $user->is_deleted = 0;
-
-            // validasi jika photo kosong maka akan di insert photo default
             if ($request->hasFile('photo')) {
+                // Delete the old photo if it exists and isn't the default
+                if ($user->photo && $user->photo !== 'user_photos/user.png') {
+                    Storage::disk('public')->delete($user->photo);
+                }
+
+                // Store the new photo
                 $path = $request->file('photo')->store('user_photos', 'public');
                 $user->photo = $path;
-            } else {
-                $user->photo = "user_photos/user.png";
+                $user->save();
             }
-            // proses insert data
-            $user->save();
+        } else {
+            // Insert new user
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'phone' => $request->phone,
+                'level_id' => $request->level,
+                'is_deleted' => 0,
+                'photo' => $request->hasFile('photo')
+                    ? $request->file('photo')->store('user_photos', 'public')
+                    : 'user_photos/user.png',
+            ]);
         }
-        // membalikkan hasil isert/ update data
+
+        // Return success response
         return response()->json(['success' => 'Data berhasil disimpan'], 200);
     }
 
