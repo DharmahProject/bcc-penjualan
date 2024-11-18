@@ -57,13 +57,10 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::get('/pricelist', [PriceListController::class, 'index']);
-
+    Route::get('/pricelist/search', [PriceListController::class, 'search'])->name('pricelist.search');
     Route::get('/pricelist/addedit/{id?}', [PriceListController::class, 'addedit'])->name('pricelist.addedit');
-
     Route::post('/pricelist/submit', [PriceListController::class, 'submit']);
-
     Route::get('/pricelist/delete/{id?}', [PriceListController::class, 'destroy'])->name('pricelist.delete');
-
     Route::get('/logout', [SessionsController::class, 'destroy']);
     Route::get('/login', function () {
         return view('dashboard');

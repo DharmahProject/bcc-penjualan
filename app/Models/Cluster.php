@@ -9,8 +9,8 @@ class Cluster extends Model
 {
     use HasFactory;
 
-    protected $table = 'cluster';
-    protected $primaryKey = 'id_cluster';
+    protected $table = 'pricelist';
+    protected $primaryKey = 'id_pricelist';
 
     protected $fillable = [
         'periode',
@@ -20,20 +20,21 @@ class Cluster extends Model
         'nomor',
         'luas_bangunan',
         'luas_tanah',
+        'luas_tanah_lebih',
         'harga_jual_standar',
         'tunai_keras',
         'tunai_bertahap',
         'kpr',
         'uang_muka',
         'angsuran',
-        'created_by', 
-        'updated_by', 
-	'is_deleted',
+        'created_by',
+        'updated_by',
+        'is_deleted',
     ];
 
     public function propertyType()
     {
-        return $this->belongsTo(PropertyType::class, 'tipe_fk'); 
+        return $this->belongsTo(PropertyType::class, 'tipe_fk');
     }
 
     public function propertyFloor()

@@ -13,6 +13,10 @@ class UserController extends Controller
 {
     public function index()
     {
+        if (auth()->user()->level_id != 1) {
+            return redirect('/dashboard')->with('error', 'You do not have access to this page.');
+        }
+
         $levels = Level::where('is_deleted', 0)->get();
         $users = User::with(['level'])
             ->where('is_deleted', 0)
@@ -48,6 +52,10 @@ class UserController extends Controller
 
     public function addedit($id = null)
     {
+        if (auth()->user()->level_id != 1) {
+            return redirect('/dashboard')->with('error', 'You do not have access to this page.');
+        }
+
         $levels = Level::where('is_deleted', 0)->get();
         $user = null;
 
@@ -64,25 +72,33 @@ class UserController extends Controller
 
     public function submit(Request $request)
     {
+        // cari data berdasarkan berdasarkan id
         $user = User::find($request->id);
+
+        // membuat validasi input sebelum proses insert data
         $request->validate([
             'name' => 'required|string|max:500',
             'email' => [
                 'required',
                 'email',
                 'max:50',
-                $request->email !== $user->email ? Rule::unique('users', 'email') : '' // Apply uniqueness validation only if email is different
+                // 10-11-2024 Penambahan validasi email harus unique jika menambah data baru
+                ($user && $request->email !== $user->email)
+                    ? Rule::unique('users', 'email')
+                    : ''
             ],
             'password' => 'required|string|max:500',
             'phone' => 'required|numeric',
             'level' => 'required|numeric',
             'photo' => $request->hasFile('photo')
-                ? 'required|image|mimes:jpeg,png,jpg|max:2048' // Apply image validation if a file is uploaded
-                : 'nullable', // If no file is uploaded, skip validation
+                ? 'required|image|mimes:jpeg,png,jpg|max:2048'
+                : 'nullable',
         ]);
 
+        // validasi jika id di temukan, maka akan update data
         if ($request->filled('id')) {
             if ($user) {
+                // proses update data
                 $user->update([
                     'name' => $request->name,
                     'email' => $request->email,
@@ -91,16 +107,17 @@ class UserController extends Controller
                     'password' => bcrypt($request->password)
                 ]);
 
-                // Update the photo if a new one is uploaded
                 if ($request->hasFile('photo')) {
+                    // menyimpan foto pada folder user_photos dengan tipe public
                     $path = $request->file('photo')->store('user_photos', 'public');
                     $user->photo = $path;
-                    $user->save();  // Save the updated photo path
+                    $user->save();
                 }
             } else {
                 return response()->json(['error' => 'Data tidak ditemukan'], 404);
             }
         } else {
+            // validasi jika id tidak di temukan, maka akan insert data
             $user = new User();
             $user->name = $request->name;
             $user->email = $request->email;
@@ -109,17 +126,17 @@ class UserController extends Controller
             $user->level_id = $request->level;
             $user->is_deleted = 0;
 
-            // Handle the uploaded image
+            // validasi jika photo kosong maka akan di insert photo default
             if ($request->hasFile('photo')) {
                 $path = $request->file('photo')->store('user_photos', 'public');
                 $user->photo = $path;
             } else {
                 $user->photo = "user_photos/user.png";
             }
-
+            // proses insert data
             $user->save();
         }
-
+        // membalikkan hasil isert/ update data
         return response()->json(['success' => 'Data berhasil disimpan'], 200);
     }
 

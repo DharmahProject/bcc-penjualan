@@ -22,6 +22,8 @@ class ShareUserData
         // Share data with all views
         View::share('name', $user ? $user->name : null);
         View::share('email', $user ? $user->email : null);
+        View::share('levelid', $user ? $user->level_id : null);
+        View::share('photo', $user ? $user->photo : null);
 
         return $next($request);
     }

@@ -13,7 +13,7 @@
                   <li class="breadcrumb-item"><a href="{{ url('') }}">Home</a></li>
                   <li class="breadcrumb-item"><a href="{{ url('/pricelist') }}">Price List</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Tambah / ubah</li>
-                  <input type="hidden" class="form-control" placeholder="Periode Mulai" id="hdId" value="{{$id_cluster != null ? $id_cluster : ''}}">
+                  <input type="hidden" class="form-control" placeholder="Periode Mulai" id="hdId" value="{{$id_pricelist != null ? $id_pricelist : ''}}">
                </ol>
             </nav>
             <h3>Price List</h3>
@@ -38,7 +38,7 @@
                   <div class="form-group row col-md-6 ">
                      <label class="col-form-label col-md-3 col-sm-3 ">Periode Mulai</label>
                      <div class="col-md-9 col-sm-9 ">
-                        <input type="date" class="form-control" placeholder="Periode Mulai" id="txtPeriodeMulai" value="{{$cluster != null ? $cluster->periode : ''}}">
+                        <input type="date" class="form-control" placeholder="Periode Mulai" id="txtPeriodeMulai" value="{{$cluster != null ? \Carbon\Carbon::parse($cluster->periode)->format('Y-m-d') : ''}}">
                      </div>
                   </div>
                </div>
@@ -104,7 +104,7 @@
                      <label class="col-form-label col-md-3 col-sm-3 ">Luas Lebih</label>
                      <div class="col-md-9 col-sm-9 ">
                         <div class="input-group">
-                           <input type="number" class="form-control luas-input" placeholder="Luas Lebih" id="txtLuasLebih">
+                           <input type="number" class="form-control luas-input" placeholder="Luas Lebih" id="txtLuasLebih" value="{{$cluster != null ? number_format($cluster->luas_tanah_lebih, 0, ',', '.') : ''}}">
                            <span class="input-group-text" id="lblLuasLebih">m²</span>
                         </div>
                      </div>
@@ -113,7 +113,7 @@
                      <label class="col-form-label col-md-3 col-sm-3 ">Total Luas Tanah</label>
                      <div class="col-md-9 col-sm-9 ">
                         <div class="input-group">
-                           <input type="text" class="form-control" placeholder="Total Luas Tanah" disabled id="txtTotalLuasTanah">
+                           <input type="text" class="form-control" placeholder="Total Luas Tanah" disabled id="txtTotalLuasTanah" value="{{$cluster != null ? $cluster->luas_tanah_lebih + $cluster->luas_tanah : 0 }}">
                            <span class="input-group-text" id="lblTotalLuasTanah">m²</span>
                         </div>
                      </div>
@@ -144,11 +144,11 @@
                </div>
                <div class="x_content">
                   <div class="form-group row col-md-6 col-sm-6">
-                     <label class="col-form-label col-md-3 col-sm-3 ">Harga Jual Standar</label>
+                     <label class="col-form-label col-md-3 col-sm-3">Harga Jual Standar</label>
                      <div class="col-md-9 col-sm-9 ">
                         <div class="input-group">
                            <span class="input-group-text" id="lblHargaJualStandar">Rp.</span>
-                           <input type="text" class="form-control currency-form" placeholder="Harga Jual Standar" id="txtHargaJualStandar" value="{{$cluster != null ? number_format($cluster->harga_jual_standar, 0, ',', '.') : ''}}">
+                           <input type="text" class="form-control currency-form input-harga" placeholder="Harga Jual Standar" id="txtHargaJualStandar" value="{{$cluster != null ? number_format($cluster->harga_jual_standar, 0, ',', '.') : ''}}">
                         </div>
                      </div>
                   </div>
@@ -157,7 +157,7 @@
                      <div class="col-md-9 col-sm-9 ">
                         <div class="input-group">
                            <span class="input-group-text" id="lblTunaiKeras">Rp.</span>
-                           <input type="text" class="form-control currency-form" placeholder="Tunai Keras 20%" id="txtTunaiKeras" value="{{$cluster != null ? number_format($cluster->tunai_keras, 0, ',', '.') : ''}}">
+                           <input type="text" class="form-control currency-form" disabled placeholder="Tunai Keras 20%" id="txtTunaiKeras" value="{{$cluster != null ? number_format($cluster->tunai_keras, 0, ',', '.') : ''}}">
                         </div>
                      </div>
                   </div>
@@ -166,7 +166,7 @@
                      <div class="col-md-9 col-sm-9 ">
                         <div class="input-group">
                            <span class="input-group-text" id="lblTunaiBertahap">Rp.</span>
-                           <input type="text" class="form-control currency-form" placeholder="Tunai Bertahap 15%" id="txtTunaiBertahap" value="{{$cluster != null ? number_format($cluster->tunai_bertahap, 0, ',', '.') : ''}}">
+                           <input type="text" class="form-control currency-form" disabled placeholder="Tunai Bertahap 15%" id="txtTunaiBertahap" value="{{$cluster != null ? number_format($cluster->tunai_bertahap, 0, ',', '.') : ''}}">
                         </div>
                      </div>
                   </div>
@@ -175,7 +175,7 @@
                      <div class="col-md-9 col-sm-9 ">
                         <div class="input-group">
                            <span class="input-group-text" id="lbltKPR">Rp.</span>
-                           <input type="text" class="form-control currency-form" placeholder="KPR 10%" id="txtKPR" value="{{$cluster != null ? number_format($cluster->kpr, 0, ',', '.') : ''}}">
+                           <input type="text" class="form-control currency-form" disabled placeholder="KPR 10%" id="txtKPR" value="{{$cluster != null ? number_format($cluster->kpr, 0, ',', '.') : ''}}">
                         </div>
                      </div>
                   </div>
@@ -232,24 +232,47 @@
    
    $(document).ready(function() {
 
-// Initialize the choices with comma-separated blok values from the cluster
-let commaSeparatedBlok = "{{ $cluster != null ? $cluster->blok : '' }}";
-let arrBlok = commaSeparatedBlok.split(',');
+   // Initialize the choices with comma-separated blok values from the cluster
+   let commaSeparatedBlok = "{{ $cluster != null ? $cluster->blok : '' }}";
+   let arrBlok = commaSeparatedBlok.split(',');
 
-choices.clearStore();
-choices.setValue(arrBlok);
+   choices.clearStore();
+   choices.setValue(arrBlok);
 
-// Function to calculate the total land area
-function calculateTotalLuasTanah() {
-    let total = 0;
-    $(".luas-input").each(function() {
-        total += parseFloat($(this).val()) || 0; // Fallback to 0 if invalid value
-    });
-    $("#txtTotalLuasTanah").val(total);
-}
+   // Function to calculate the total land area
+   function calculateTotalLuasTanah() {
+      let total = 0;
+      $(".luas-input").each(function() {
+         total += parseFloat($(this).val()) || 0; // Fallback to 0 if invalid value
+      });
+      $("#txtTotalLuasTanah").val(total);
+   }
+
+   function calculateTunaiKPR() {
+      let tunaiBerahap = 0;
+      let tunaiKeras = 0;
+      let kpr = 0;
+      $(".input-harga").each(function() {
+         var harga =  $(this).val().replace(/\./g, "");
+         
+         tunaiBerahap += parseFloat(harga*0.15) || 0; // Fallback to 0 if invalid value
+         tunaiKeras += parseFloat(harga*0.2) || 0; // Fallback to 0 if invalid value
+         kpr += parseFloat(harga*0.1) || 0; // Fallback to 0 if invalid value
+      });
+      $("#txtTunaiKeras").val(formatRupiah(tunaiKeras));
+      $("#txtTunaiBertahap").val(formatRupiah(tunaiBerahap));
+      $("#txtKPR").val(formatRupiah(kpr));
+      
+   }
+
+   function formatRupiah(number) {
+    // Convert number to a string, add commas or dots for thousands
+      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+   }
 
 // Bind calculateTotalLuasTanah to keyup/change events for ".luas-input"
-$(".luas-input").on("keyup change", calculateTotalLuasTanah);
+   $(".luas-input").on("keyup change", calculateTotalLuasTanah);
+   $(".input-harga").on("keyup change", calculateTunaiKPR);
 
 // Function to format currency (with thousands separator and two decimal places)
 function formatCurrency(input) {
@@ -316,7 +339,7 @@ $('#btnSubmit').click(function() {
                 jumlah_lantai: $('#cbJumlahLantai').val(),
                 luas_bangunan: $('#txtLuasBangunan').val(),
                 luas_tanah: $('#txtLuasTanah').val(),
-                luas_lebih: $('#txtLuasLebih').val(),
+                luas_lebih: $('#txtLuasLebih').val() == null ? 0  : $('#txtLuasLebih').val(),
                 total_luas_tanah: $('#txtTotalLuasTanah').val(),
                 blok: blokString,
                 harga_jual_standar: getNumericValue($('#txtHargaJualStandar').val()),

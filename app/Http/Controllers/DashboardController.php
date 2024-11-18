@@ -13,10 +13,14 @@ class DashboardController extends Controller
         $user = Auth::user();
         $name = $user->name; // Access the name attribute
         $email = $user->email; // Access the email attribute
+        $photo = $user->photo; // Access the photo attribute
+        $levelid = $user->level_id; // Access the photo attribute
 
         return view('dashboard', [
             'email' => $email,
             'name' => $name,
+            'photo' => $photo,
+            'levelid' => $levelid,
         ]);
     }
 }

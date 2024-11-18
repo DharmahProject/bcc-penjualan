@@ -82,7 +82,6 @@
    }
    
    function dataUser() {
-      console.log("masuk");
         $.ajax({
             url: "{{ route('user.search') }}",
             type: "GET",
@@ -112,7 +111,7 @@
                                       orientation: 'landscape', // Set to landscape
                                       pageSize: 'A4',           // Set page size (optional)
                                       text: 'Export PDF',       // Button text (optional)
-                                      title: 'Pricelist Bukit Cimanggu City' // PDF title (optional)
+                                      title: 'Data User' // PDF title (optional)
                                   }
                               ]
                     });

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('cluster', function (Blueprint $table) {
-            $table->integer('tipe_fk')->unsigned()->nullable(); 
+            // $table->datetime('periode')->unsigned()->nullable();
         });
     }
 
@@ -23,7 +23,7 @@ return new class extends Migration
     {
         Schema::table('cluster', function (Blueprint $table) {
             //
-            $table->datetime('periode')->nullable(false)->change();
+            //$table->datetime('periode')->nullable(false)->change();
         });
     }
 };
