@@ -32,7 +32,7 @@
                         <div>
                             <label for="password_confirmation">Konfirmasi Password</label>
                             <input id="password-confirmation" name="password_confirmation" type="password" class="form-control" placeholder="Konfirmasi Password">
-                            @error('password')
+                            @error('password_confirmation')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                             @enderror
                         </div>

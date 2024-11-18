@@ -13,6 +13,10 @@ class UserController extends Controller
 {
     public function index()
     {
+        if (auth()->user()->level_id != 1) {
+            return redirect('/dashboard')->with('error', 'You do not have access to this page.');
+        }
+
         $levels = Level::where('is_deleted', 0)->get();
         $users = User::with(['level'])
             ->where('is_deleted', 0)
@@ -48,6 +52,10 @@ class UserController extends Controller
 
     public function addedit($id = null)
     {
+        if (auth()->user()->level_id != 1) {
+            return redirect('/dashboard')->with('error', 'You do not have access to this page.');
+        }
+
         $levels = Level::where('is_deleted', 0)->get();
         $user = null;
 
@@ -64,20 +72,22 @@ class UserController extends Controller
 
     public function submit(Request $request)
     {
-        $user = User::find($request->id);
+        // Retrieve user data by ID if provided
+        $user = $request->filled('id') ? User::find($request->id) : null;
 
+        // Validate the input
         $request->validate([
             'name' => 'required|string|max:500',
             'email' => [
                 'required',
                 'email',
                 'max:50',
-                // Apply uniqueness check only when updating an existing user
-                ($user && $request->email !== $user->email)
-                    ? Rule::unique('users', 'email')
-                    : ''
+                // Jika sedang menambah data baru, pastikan email unik
+                $request->filled('id')
+                    ? Rule::unique('users', 'email')->ignore($user?->id) // Untuk update, abaikan email milik user yang sedang diedit
+                    : Rule::unique('users', 'email'), // Untuk insert, email harus unik
             ],
-            'password' => 'required|string|max:500',
+            'password' => $user ? 'nullable|string|max:500' : 'required|string|max:500',
             'phone' => 'required|numeric',
             'level' => 'required|numeric',
             'photo' => $request->hasFile('photo')
@@ -85,43 +95,44 @@ class UserController extends Controller
                 : 'nullable',
         ]);
 
-        if ($request->filled('id')) {
-            if ($user) {
-                $user->update([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'level_id' => $request->level,
-                    'password' => bcrypt($request->password)
-                ]);
-
-                if ($request->hasFile('photo')) {
-                    $path = $request->file('photo')->store('user_photos', 'public');
-                    $user->photo = $path;
-                    $user->save();
-                }
-            } else {
-                return response()->json(['error' => 'Data tidak ditemukan'], 404);
-            }
-        } else {
-            $user = new User();
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->password = bcrypt($request->password);
-            $user->phone = $request->phone;
-            $user->level_id = $request->level;
-            $user->is_deleted = 0;
+        if ($user) {
+            // Update existing user
+            $user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'level_id' => $request->level,
+                // Update password only if provided
+                'password' => $request->password ? bcrypt($request->password) : $user->password,
+            ]);
 
             if ($request->hasFile('photo')) {
+                // Delete the old photo if it exists and isn't the default
+                if ($user->photo && $user->photo !== 'user_photos/user.png') {
+                    Storage::disk('public')->delete($user->photo);
+                }
+
+                // Store the new photo
                 $path = $request->file('photo')->store('user_photos', 'public');
                 $user->photo = $path;
-            } else {
-                $user->photo = "user_photos/user.png";
+                $user->save();
             }
-
-            $user->save();
+        } else {
+            // Insert new user
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'phone' => $request->phone,
+                'level_id' => $request->level,
+                'is_deleted' => 0,
+                'photo' => $request->hasFile('photo')
+                    ? $request->file('photo')->store('user_photos', 'public')
+                    : 'user_photos/user.png',
+            ]);
         }
 
+        // Return success response
         return response()->json(['success' => 'Data berhasil disimpan'], 200);
     }
 

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('photo', 500)->after('phone')->nullable();
-            $table->dropColumn('about_me'); // Replace 'column_name' with the actual column name
-            $table->dropColumn('location'); // Replace 'column_name' with the actual column name
+            // $table->dropColumn('about_me'); // Replace 'column_name' with the actual column name
+            // $table->dropColumn('location'); // Replace 'column_name' with the actual column name
         });
     }
 
@@ -27,8 +27,8 @@ return new class extends Migration
             // menghapus perubahan
             if (Schema::hasColumn('users')) {
                 $table->dropColumn('photo');
-                $table->string('about_me')->nullable();
-                $table->string('location')->nullable();
+                // $table->string('about_me')->nullable();
+                //$table->string('location')->nullable();
             }
         });
     }

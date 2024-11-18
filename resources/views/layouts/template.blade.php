@@ -613,7 +613,7 @@
         function errorMsg(title, message){
             Swal.fire({
             icon: "error",
-            title: "title",
+            title: "Error",
             text: message
             });
         }
@@ -623,7 +623,7 @@
             swal({
                 title: title,
                 text: message,
-                type: 'error',
+                type: 'Error',
                 confirmButtonClass: 'btn btn-confirm mt-2'
             })
         }

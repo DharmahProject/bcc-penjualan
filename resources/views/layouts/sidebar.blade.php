@@ -9,7 +9,7 @@
       <!-- menu profile quick info -->
       <div class="profile clearfix">
         <div class="profile_pic">
-          <img src="{{ url('assets/images/img.jpg')}}" alt="..." class="img-circle profile_img">
+          <img src="{{ url('storage/'.$photo)}}" alt="..." class="img-circle profile_img">
         </div>
         <div class="profile_info">
           <span>Welcome,</span>
@@ -40,21 +40,23 @@
           <h3>Transaksi</h3>
           <ul class="nav side-menu">
             <li class="{{ Request::is('penjualan') ? 'active' : '' }}"><a href="{{ url('penjualan') }}"><i class="fa fa-calculator"></i> Penjualan</a></li>
-            <li class="{{ Request::is('ppjb') ? 'active' : '' }}"><a href="{{ url('ppjb') }}"><i class="fa fa-file-text"></i> PPJB</a></li>              
-            <li class="{{ Request::is('komisi') ? 'active' : '' }}"><a href="{{ url('komisi') }}"><i class="fa fa-money"></i> Komisi</a></li>
+            {{-- <li class="{{ Request::is('ppjb') ? 'active' : '' }}"><a href="{{ url('ppjb') }}"><i class="fa fa-file-text"></i> PPJB</a></li>              
+            <li class="{{ Request::is('komisi') ? 'active' : '' }}"><a href="{{ url('komisi') }}"><i class="fa fa-money"></i> Komisi</a></li> --}}
           </ul>
         </div>
-        <div class="menu_section">
+        {{-- <div class="menu_section">
           <h3>Laporan</h3>
           <ul class="nav side-menu">
             <li class="{{ Request::is('laporanpenjualan') ? 'active' : '' }}"><a href="{{ url('laporanpenjualan') }}"><i class="fa fa-calculator"></i> Penjualan</a></li>
           </ul>
-        </div>
+        </div> --}}
         <div class="menu_section">
           <h3>User Manajemen</h3>
           <ul class="nav side-menu">
             <li class="{{ Request::is('profile') ? 'active' : '' }}"><a href="{{ url('profile') }}"><i class="fa fa-calculator"></i> Profile</a></li>
-            <li class="{{ Request::is('user') ? 'active' : '' }}"><a href="{{ url('user') }}"><i class="fa fa-file-text"></i> User</a></li>              
+            @if($levelid == 1)
+              <li class="{{ Request::is('user') ? 'active' : '' }}"><a href="{{ url('user') }}"><i class="fa fa-file-text"></i> User</a></li>              
+            @endif
           </ul>
         </div>
 

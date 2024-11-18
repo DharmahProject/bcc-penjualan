@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\PropertyType;
 use App\Models\PropertyFloor;
 use App\Models\Cluster;
@@ -11,11 +12,12 @@ class PriceListController extends Controller
 {
     public function index()
     {
+
         $propertyTypes = PropertyType::where('is_deleted', 0)->get();
         $propertyFloors = PropertyFloor::where('is_deleted', 0)->get();
-        $clusters = Cluster::with(['propertyType', 'propertyFloor']) 
-                            ->where('is_deleted', 0) 
-                            ->get();
+        $clusters = Cluster::with(['propertyType', 'propertyFloor'])
+            ->where('is_deleted', 0)
+            ->get();
 
         return view('master.pricelist.index', [
             'propertyTypes' => $propertyTypes,
@@ -24,21 +26,60 @@ class PriceListController extends Controller
         ]);
     }
 
+    public function search(Request $request)
+    {
+        $periodFrom = $request->get('periodFrom');
+        $periodTo = $request->get('periodTo');
+        $blok = $request->get('blok');
+        $lantai = $request->get('lantai');
+        $tipe = $request->get('tipe');
+
+        $pricelist = Cluster::query();
+
+        if ($periodFrom && $periodTo) {
+            $pricelist->whereBetween('periode', [$periodFrom, $periodTo]);
+        } elseif ($periodFrom) {
+            $pricelist->where('periode', '>=', $periodFrom);
+        } elseif ($periodTo) {
+            $pricelist->where('periode', '<=', $periodTo);
+        }
+
+        if ($blok) {
+            $pricelist->where('blok', 'like', '%' . $blok . '%');
+        }
+        if ($lantai) {
+            $pricelist->where('floor_fk', 'like', '%' . $lantai . '%');
+        }
+
+        if ($tipe) {
+            $pricelist->where('tipe_fk', 'like', '%' . $tipe . '%');
+        }
+
+        $pricelist = $pricelist->where('is_deleted', 0)->get();
+
+        $view = view('master.pricelist.datapricelist', ['clusters' => $pricelist])->render();
+
+        return response()->json(['data' => $view]);
+    }
+
     public function addedit($id_cluster = null)
     {
+        if (auth()->user()->level_id != 1) {
+            return redirect('/pricelist')->with('error', 'You do not have access to this page.');
+        }
 
         $propertyTypes = PropertyType::where('is_deleted', 0)->get();
         $propertyFloors = PropertyFloor::where('is_deleted', 0)->get();
 
-        $cluster = null; 
+        $cluster = null;
 
         if ($id_cluster) {
-            $cluster = Cluster::findOrFail($id_cluster); 
+            $cluster = Cluster::findOrFail($id_cluster);
         }
 
 
         return view('master.pricelist.addedit', [
-            'id_cluster' => $id_cluster,
+            'id_pricelist' => $id_cluster,
             'propertyTypes' => $propertyTypes,
             'propertyFloors' => $propertyFloors,
             'cluster' => $cluster
@@ -59,49 +100,52 @@ class PriceListController extends Controller
             'tunai_bertahap' => 'required|numeric',
             'kpr' => 'required|numeric',
             'uang_muka' => 'required|numeric',
-            'angsuran' => 'required|numeric',
+            'angsuran' => 'required|numeric'
         ]);
 
-    if ($request->filled('ID')) {
-        $cluster = Cluster::find($request->ID);
+        if ($request->filled('ID')) {
+            $cluster = Cluster::find($request->ID);
 
-        if ($cluster) {
-            $cluster->update([
+            if ($cluster) {
+                $cluster->update([
+                    'periode' => $request->periode_mulai,
+                    'tipe_fk' => $request->tipe,
+                    'floor_fk' => $request->jumlah_lantai,
+                    'blok' => $request->blok,
+                    'luas_bangunan' => $request->luas_bangunan,
+                    'luas_tanah' => $request->luas_tanah,
+                    'luas_tanah_lebih' => $request->luas_lebih,
+                    'harga_jual_standar' => $request->harga_jual_standar,
+                    'tunai_keras' => $request->tunai_keras,
+                    'tunai_bertahap' => $request->tunai_bertahap,
+                    'kpr' => $request->kpr,
+                    'uang_muka' => $request->uang_muka,
+                    'angsuran' => $request->angsuran,
+                    'updated_by' => auth()->user()->name
+                ]);
+            } else {
+                return response()->json(['error' => 'Data tidak ditemukan'], 404);
+            }
+        } else {
+            Cluster::create([
                 'periode' => $request->periode_mulai,
                 'tipe_fk' => $request->tipe,
                 'floor_fk' => $request->jumlah_lantai,
                 'blok' => $request->blok,
                 'luas_bangunan' => $request->luas_bangunan,
                 'luas_tanah' => $request->luas_tanah,
+                'luas_tanah_lebih' => $request->luas_lebih,
                 'harga_jual_standar' => $request->harga_jual_standar,
                 'tunai_keras' => $request->tunai_keras,
                 'tunai_bertahap' => $request->tunai_bertahap,
                 'kpr' => $request->kpr,
                 'uang_muka' => $request->uang_muka,
-                'angsuran' => $request->angsuran
+                'angsuran' => $request->angsuran,
+                'is_deleted' => 0,
+                'created_by' => auth()->user()->name,
+                'updated_by' => auth()->user()->name
             ]);
-        } else {
-            return response()->json(['error' => 'Data tidak ditemukan'], 404);
         }
-    } else {
-        Cluster::create([
-            'periode' => $request->periode_mulai,
-            'tipe_fk' => $request->tipe,
-            'floor_fk' => $request->jumlah_lantai,
-            'blok' => $request->blok,
-            'luas_bangunan' => $request->luas_bangunan,
-            'luas_tanah' => $request->luas_tanah,
-            'harga_jual_standar' => $request->harga_jual_standar,
-            'tunai_keras' => $request->tunai_keras,
-            'tunai_bertahap' => $request->tunai_bertahap,
-            'kpr' => $request->kpr,
-            'uang_muka' => $request->uang_muka,
-            'angsuran' => $request->angsuran,
-            'is_deleted' => 0,
-            'created_by' => 'System',
-            'updated_by' => 'System'
-        ]);
-    }
 
         return response()->json(['success' => 'Data berhasil disimpan'], 200);
     }

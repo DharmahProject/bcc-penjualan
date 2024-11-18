@@ -14,11 +14,18 @@ class LevelSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('level')->insertOrIgnore([
-            ['id' => 1, 'name' => 'super admin'],
-            ['id' => 2, 'name' => 'sales'],
-            ['id' => 3, 'name' => 'sales manager'],
-            ['id' => 4, 'name' => 'sales coordinator'],
-        ]);
+        $levels = [
+            ['name' => 'super admin'],
+            ['name' => 'sales'],
+            ['name' => 'sales manager'],
+            ['name' => 'sales coordinator'],
+        ];
+
+        foreach ($levels as $level) {
+            DB::table('level')->updateOrInsert(
+                ['name' => $level['name']], // Check for existing record with the same name
+                $level // Insert this record if it doesn't exist
+            );
+        }
     }
 }
